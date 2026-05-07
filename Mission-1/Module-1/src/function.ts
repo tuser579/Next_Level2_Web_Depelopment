@@ -15,7 +15,7 @@ const poorUser = {
     name: 'Tuser',
     balance: 0,
     addBalance(value: number) {
-        return this.balance + value
+        return this.balance + value;
     }
 }
 
