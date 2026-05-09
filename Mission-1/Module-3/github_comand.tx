@@ -1,0 +1,5 @@
+https://github.com/Apollo-Level2-Web-Dev/be-a-typescript-technocrat-b7/blob/module-3
+
+// npx tsc --init   // for create tsconfig.json
+// npx tsc          // for complie the code
+// npx tsc --watch // for watch the code
