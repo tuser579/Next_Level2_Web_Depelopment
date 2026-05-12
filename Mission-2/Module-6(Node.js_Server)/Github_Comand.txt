@@ -1,0 +1,10 @@
+Github Repository Link: https://github.com/Apollo-Level2-Web-Dev/be-a-node-express-expert-b7/tree/module-6/learning_node/src
+npm package Link : https://www.npmjs.com/package/tsx
+
+
+
+1. npm init -y                     # for create package.json
+2. npm i -D typescript             # for install typescript devDependency
+3. npx tsc --init                  # for create tsconfig.json
+4. npm install -D @types/node      # for install node types
+5. npm i tsx                       # for run typescript files
