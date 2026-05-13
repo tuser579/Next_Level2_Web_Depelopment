@@ -1,5 +1,6 @@
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import { routeHandler } from "./routes/route";
+import config from "./config/index";
 const server: Server = createServer((req: IncomingMessage,res: ServerResponse) => {
     // console.log(req.url);
     // console.log(req.method);
@@ -10,6 +11,6 @@ const server: Server = createServer((req: IncomingMessage,res: ServerResponse) =
     routeHandler(req,res);
 })  
 
-server.listen(3000,() => {
-    console.log("Server is running on port 3000");
+server.listen(config.port,() => {
+    console.log(`Server is running on port ${config.port}`);
 })

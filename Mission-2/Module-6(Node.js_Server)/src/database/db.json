@@ -10,8 +10,18 @@
         "price": 200
     },
     {
-        "id": 3,
-        "name": "Product 3",
-        "price": 300
+        "id": 4,
+        "name": "Product 10",
+        "price": 100
+    },
+    {
+        "id": 5,
+        "name": "Product 10",
+        "price": 100
+    },
+    {
+        "id": 6,
+        "name": "Product 10",
+        "price": 100
     }
 ]
