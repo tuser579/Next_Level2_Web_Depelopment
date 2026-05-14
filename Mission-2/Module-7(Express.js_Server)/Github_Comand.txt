@@ -1,0 +1,15 @@
+Link List:
+Github Link: https://github.com/Apollo-Level2-Web-Dev/be-a-node-express-expert-b7/tree/module-7
+
+
+Comand List:
+1. npm init --y                                   # for package.json file created
+2. npm i -D typescript                            # for typescript package installed
+3. npx tsc --init                                 # for typescript init (create tsconfig.json file)
+4. npm install express                            # for express package installed
+5. npm install @types/express -D                  # for express types package installed
+6. npm i -D tsx                                   # for tsx package installed
+7. npm i pg                                       # for PostgreSQL package installed
+8. npm i --save-dev @types/pg                     # for PostgreSQL types package installed
+9. npm i express-async-handler --save-dev         # for express-async-handler package installed
+10.npm install dotenv --save-dev                  # for dotenv package installed
