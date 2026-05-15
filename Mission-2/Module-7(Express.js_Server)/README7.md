@@ -76,3 +76,240 @@ The following types are used for more specific, specialized use cases.
 | `JSON` | Varies | Exact copy of input text (prefer `JSONB` for general use) |
 | `XML` / `XMLTYPE` | Varies | Storing XML data safely |
 
+
+# Summary of this Module:
+
+## Learning Content in this module:
+1. Create server with Express & TypeScript 
+2. Understanding the Express Request and Response 
+3. Setting Up Postgres with Neon Serverless Cloud 
+4. Explore SQL Data types with practical implementations 
+5. Executing Pool and creating tables 
+6. Creating our first User with POST method 
+7. Getting All Users and Single user with params 
+8. Update User with the PUT method 
+9. Delete User with Delete Method 
+10. Set up Environment-based Configurations 
+
+
+## Example Server.ts code:
+
+### 1. Basic Express Server:
+```typescript
+import express, { type Application, type Request, type Response } from 'express';
+
+const app: Application = express();
+const port: number = 4000;
+
+app.use(express.json());
+
+app.get('/', (req: Request, res: Response) => {
+    res.send('Hello World!');
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
+```
+
+### 2. Understanding the Express Request and Response
+```typescript
+import express, { type Application, type Request, type Response } from 'express';
+
+const app: Application = express();
+const port: number = 4000;
+
+app.use(express.json());
+
+app.get('/', (req: Request, res: Response) => {
+    res.send('Hello World!');
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
+```
+
+### 3. Setting Up Postgres with Neon Serverless Cloud
+```typescript
+import pg from 'pg';
+
+const pool = new pg.Pool({
+    connectionString: process.env.CONNECTION_STRING,
+});
+
+export default pool;
+```
+
+### 4. Explore SQL Data types with practical implementations
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    age INTEGER,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### 5. Executing Pool and creating tables
+```typescript
+import pg from 'pg';
+
+const pool = new pg.Pool({
+    connectionString: process.env.CONNECTION_STRING,
+});
+
+export default pool;
+```
+
+### 6. Creating our first User with POST method
+```typescript
+import express, { type Application, type Request, type Response } from 'express';
+
+const app: Application = express();
+const port: number = 4000;
+
+app.use(express.json());
+
+app.post('/users', (req: Request, res: Response) => {
+    const { name, email, password } = req.body;
+    pool.query(
+        'INSERT INTO users (name, email, password) VALUES ($1, $2, $3)',
+        [name, email, password],
+        (err, result) => {
+            if (err) {
+                console.error('Error executing query', err);
+                res.status(500).json({ error: 'Internal server error' });
+                return;
+            }
+            res.status(201).json({ message: 'User created successfully' });
+        }
+    );
+});
+```
+
+### 7. Getting All Users and Single user with params
+```typescript
+import express, { type Application, type Request, type Response } from 'express';
+
+const app: Application = express();
+const port: number = 4000;
+
+app.use(express.json());
+
+app.get('/users', (req: Request, res: Response) => {
+    pool.query('SELECT * FROM users', (err, result) => {
+        if (err) {
+            console.error('Error executing query', err);
+            res.status(500).json({ error: 'Internal server error' });
+            return;
+        }
+        if (result.rows.length === 0) {
+            res.status(404).json({ error: 'Users not found' });
+            return;
+        }
+        res.status(200).json(result.rows);
+    });
+});
+
+app.get('/users/:id', (req: Request, res: Response) => {
+    const { id } = req.params;
+    pool.query('SELECT * FROM users WHERE id = $1', [id], (err, result) => {
+        if (err) {
+            console.error('Error executing query', err);
+            res.status(500).json({ error: 'Internal server error' });
+            return;
+        }
+        if (result.rows.length === 0) {
+            res.status(404).json({ error: 'User not found' });
+            return;
+        }
+        res.status(200).json(result.rows[0]);
+    });
+});
+```
+
+### 8. Update User with the PUT method
+```typescript
+import express, { type Application, type Request, type Response } from 'express';
+
+const app: Application = express();
+const port: number = 4000;
+
+app.use(express.json());
+
+app.put('/users/:id', (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { name, email, password } = req.body;
+    pool.query(
+        'UPDATE users SET name = $1, email = $2, password = $3 WHERE id = $4 RETURNING *',
+        [name, email, password, id],
+        (err, result) => {
+            if (err) {
+                console.error('Error executing query', err);
+                res.status(500).json({ error: 'Internal server error' });
+                return;
+            }
+            if (result.rows.length === 0) {
+                res.status(404).json({ error: 'User not found' });
+                return;
+            }
+            res.status(200).json(result.rows[0]);
+        }
+    );
+});
+```
+
+### 9. Delete User with Delete Method
+```typescript
+import express, { type Application, type Request, type Response } from 'express';
+
+const app: Application = express();
+const port: number = 4000;
+
+app.use(express.json());
+
+app.delete('/users/:id', (req: Request, res: Response) => {
+    const { id } = req.params;
+    pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id], (err, result) => {
+        if (err) {
+            console.error('Error executing query', err);
+            res.status(500).json({ error: 'Internal server error' });
+            return;
+        }
+        if (result.rows.length === 0) {
+            res.status(404).json({ error: 'User not found' });
+            return;
+        }
+        res.status(200).json(result.rows[0]);
+    });
+});
+```
+
+### 10. Set up Environment-based Configurations
+```typescript
+import express, { type Application, type Request, type Response } from 'express';
+import dotenv from 'dotenv';
+dotenv.config();
+
+const app: Application = express();
+const port: number = Number(process.env.PORT) || 4000;
+
+app.use(express.json());
+
+app.get('/', (req: Request, res: Response) => {
+    res.send('Hello World!');
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
+```
+
+
+
+
