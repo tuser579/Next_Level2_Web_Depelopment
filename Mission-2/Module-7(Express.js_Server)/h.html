@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Elegant Slide | Sign In / Sign Up Toggle</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            overflow-x: hidden;
+        }
+
+        /* main card container */
+        .card {
+            max-width: 1100px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* SLIDER WRAPPER - smooth, elegant transition */
+        .slider-wrapper {
+            display: flex;
+            width: 200%;
+            transition: transform 0.9s cubic-bezier(0.25, 0.92, 0.4, 1.02);
+            transform: translateX(0%);
+        }
+
+        /* each slide takes 50% of wrapper */
+        .slide {
+            width: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Two column layout inside each slide */
+        .split-layout {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 580px;
+        }
+
+        /* each side inside slide */
+        .side {
+            flex: 1;
+            padding: 2.8rem 2.5rem;
+            transition: all 0.3s ease;
+            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Left side background (form side) */
+        .form-side {
+            background: #ffffff;
+        }
+
+        /* Right side gradient (welcome / info side) */
+        .info-side {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            text-align: center;
+        }
+
+        /* headings */
+        h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.3px;
+        }
+        .form-side h2 {
+            color: #0f172a;
+        }
+        .info-side h2 {
+            color: white;
+        }
+        .subhead {
+            color: #64748b;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .info-side .subhead {
+            color: rgba(255,255,255,0.85);
+        }
+
+        /* social row */
+        .social-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+        }
+        .social-btn {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 2.5rem;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+        .social-btn i {
+            font-size: 1rem;
+        }
+        .social-btn:hover {
+            background: #e9eef3;
+            transform: translateY(-2px);
+        }
+
+        /* OR divider */
+        .or-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 1.2rem 0 1.5rem;
+            color: #94a3b8;
+            font-size: 0.75rem;
+        }
+        .or-divider::before,
+        .or-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        /* input groups */
+        .input-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.85rem 1rem 0.85rem 2.6rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            background: #fefefe;
+            transition: all 0.2s;
+            outline: none;
+        }
+        input:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+        }
+
+        .forgot-link {
+            text-align: right;
+            margin: -0.3rem 0 1.5rem 0;
+        }
+        .forgot-link a {
+            font-size: 0.8rem;
+            color: #7c3aed;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .forgot-link a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-primary {
+            background: #7c3aed;
+            border: none;
+            width: 100%;
+            padding: 0.9rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .btn-primary:hover {
+            background: #6d28d9;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-light {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.8);
+            border-radius: 2rem;
+            padding: 0.7rem 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 1rem;
+        }
+        .btn-outline-light:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: white;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary-outline {
+            background: transparent;
+            border: 2px solid white;
+            border-radius: 2rem;
+            padding: 0.7rem 2rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+        }
+        .btn-secondary-outline:hover {
+            background: white;
+            color: #4f46e5;
+            border-color: white;
+            transform: scale(1.02);
+        }
+
+        .demo-hint {
+            margin-top: 1.5rem;
+            font-size: 0.7rem;
+            text-align: center;
+            color: #94a3b8;
+            border-top: 1px solid #eef2ff;
+            padding-top: 1rem;
+        }
+        .info-side .demo-hint {
+            color: rgba(255,255,255,0.6);
+            border-top-color: rgba(255,255,255,0.2);
+        }
+
+        .form-feedback {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            text-align: center;
+            color: #ef4444;
+        }
+
+        /* Responsive */
+        @media (max-width: 780px) {
+            .split-layout {
+                flex-direction: column;
+                min-height: auto;
+            }
+            .side {
+                padding: 2rem 1.5rem;
+            }
+            .card {
+                border-radius: 1.8rem;
+            }
+            h2 {
+                font-size: 1.6rem;
+            }
+            .slider-wrapper {
+                width: 200%;
+            }
+        }
+
+        /* extra smoothness */
+        .slider-wrapper {
+            will-change: transform;
+        }
+        .info-side .subhead {
+            max-width: 260px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .social-btn:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="slider-wrapper" id="sliderWrapper">
+        <!-- SLIDE 1: SIGN-IN MODE (Form on LEFT side, Welcome section on RIGHT side) -->
+        <div class="slide">
+            <div class="split-layout">
+                <!-- LEFT: Sign In Form -->
+                <div class="side form-side">
+                    <h2>Sign In</h2>
+                    <div class="subhead">Welcome back! Access your account</div>
+                    <div class="social-row">
+                        <button class="social-btn" data-social="google"><i class="fab fa-google"></i> Google</button>
+                        <button class="social-btn" data-social="facebook"><i class="fab fa-facebook-f"></i> Facebook</button>
+                        <button class="social-btn" data-social="linkedin"><i class="fab fa-linkedin-in"></i> LinkedIn</button>
+                    </div>
+                    <div class="or-divider">
+                        <span></span>
+                        <span>or use email & password</span>
+                        <span></span>
+                    </div>
+                    <form id="loginForm">
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="loginEmail" placeholder="Email address" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="loginPassword" placeholder="Password" required>
+                        </div>
+                        <div class="forgot-link">
+                            <a href="#" id="forgotPwdLink">Forget Your Password?</a>
+                        </div>
+                        <button type="submit" class="btn-primary">SIGN IN</button>
+                        <div id="loginFeedback" class="form-feedback"></div>
+                    </form>
+                    <div class="demo-hint">
+                        <i class="fas fa-info-circle"></i> Demo: any credentials work
+                    </div>
+                </div>
+                <!-- RIGHT: Welcome / Info Section (Hello Friend) -->
+                <div class="side info-side">
+                    <h2>Hello, Friend!</h2>
+                    <div class="subhead">
+                        Register with your personal details to use all of site features
+                    </div>
+                    <button class="btn-outline-light" id="goToSignUpBtn">SIGN UP</button>
+                    <div class="demo-hint" style="margin-top: 2rem;">
+                        <i class="fas fa-arrow-right"></i> Join our community
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: SIGN-UP MODE (Form on RIGHT side, Login text on LEFT side) -->
+        <div class="slide">
+            <div class="split-layout">
+                <!-- LEFT: Login Prompt Section (now on left side) -->
+                <div class="side info-side" style="background: linear-gradient(135deg, #4f46e5, #7c3aed);">
+                    <h2>Welcome Back!</h2>
+                    <div class="subhead" style="color: rgba(255,255,255,0.9);">
+                        Already have an account? Sign in to continue your journey.
+                    </div>
+                    <button class="btn-secondary-outline" id="backToSignInBtn">SIGN IN</button>
+                    <div class="demo-hint" style="margin-top: 2rem;">
+                        <i class="fas fa-user-check"></i> Return to your account
+                    </div>
+                </div>
+                <!-- RIGHT: Register Form -->
+                <div class="side form-side">
+                    <h2>Create Account</h2>
+                    <div class="subhead">Register with your personal details</div>
+                    <form id="registerForm">
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="regFullname" placeholder="Full Name" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="regEmail" placeholder="Email address" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="regPassword" placeholder="Password" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-check-circle"></i>
+                            <input type="password" id="regConfirmPwd" placeholder="Confirm Password" required>
+                        </div>
+                        <button type="submit" class="btn-primary" style="background: #4f46e5;">REGISTER</button>
+                        <div id="registerFeedback" class="form-feedback"></div>
+                    </form>
+                    <div class="demo-hint">
+                        <i class="fas fa-laptop"></i> Sign up to explore features
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // DOM elements
+        const sliderWrapper = document.getElementById('sliderWrapper');
+        const goToSignUpBtn = document.getElementById('goToSignUpBtn');
+        const backToSignInBtn = document.getElementById('backToSignInBtn');
+        
+        // Forms and feedback
+        const loginForm = document.getElementById('loginForm');
+        const loginFeedback = document.getElementById('loginFeedback');
+        const registerForm = document.getElementById('registerForm');
+        const registerFeedback = document.getElementById('registerFeedback');
+        const forgotLink = document.getElementById('forgotPwdLink');
+        
+        // State management
+        let currentSlide = 'login'; // 'login' or 'register'
+        let isAnimating = false;
+        
+        // Smooth slide to Sign-Up mode (moves left to reveal second slide)
+        // Visual effect: Sign-Up form slides in from right, login prompt appears on left
+        function slideToSignUp() {
+            if (currentSlide === 'register' || isAnimating) return;
+            isAnimating = true;
+            sliderWrapper.style.transform = 'translateX(-50%)';
+            currentSlide = 'register';
+            // Clear register feedback when entering
+            if (registerFeedback) registerFeedback.innerText = '';
+            // Reset register form fields for fresh experience
+            const regFull = document.getElementById('regFullname');
+            const regMail = document.getElementById('regEmail');
+            const regPass = document.getElementById('regPassword');
+            const regConfirm = document.getElementById('regConfirmPwd');
+            if (regFull) regFull.value = '';
+            if (regMail) regMail.value = '';
+            if (regPass) regPass.value = '';
+            if (regConfirm) regConfirm.value = '';
+            // Unlock after transition (0.9s + buffer)
+            setTimeout(() => {
+                isAnimating = false;
+            }, 950);
+        }
+        
+        // Smooth slide to Sign-In mode (moves right back to first slide)
+        // Visual effect: Sign-In form slides back from left, welcome section reappears on right
+        function slideToSignIn() {
+            if (currentSlide === 'login' || isAnimating) return;
+            isAnimating = true;
+            sliderWrapper.style.transform = 'translateX(0%)';
+            currentSlide = 'login';
+            // Clear login feedback
+            if (loginFeedback) loginFeedback.innerText = '';
+            setTimeout(() => {
+                isAnimating = false;
+            }, 950);
+        }
+        
+        // Event Listeners for toggle buttons
+        if (goToSignUpBtn) {
+            goToSignUpBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                slideToSignUp();
+            });
+        }
+        
+        if (backToSignInBtn) {
+            backToSignInBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                slideToSignIn();
+            });
+        }
+        
+        // Handle Sign-In Form Submission
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPassword').value.trim();
+                
+                if (!email) {
+                    loginFeedback.innerText = '❌ Please enter your email address.';
+                    return;
+                }
+                if (!password) {
+                    loginFeedback.innerText = '❌ Please enter your password.';
+                    return;
+                }
+                
+                loginFeedback.innerHTML = '<span style="color:#10b981;">✅ Login successful! (Demo mode)</span>';
+                setTimeout(() => {
+                    alert(`🎉 Welcome back! (Signed in as ${email})\nThis is a front-end demo.`);
+                    loginFeedback.innerText = '';
+                }, 800);
+            });
+        }
+        
+        // Handle Sign-Up Form Submission
+        if (registerForm) {
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const fullname = document.getElementById('regFullname').value.trim();
+                const email = document.getElementById('regEmail').value.trim();
+                const password = document.getElementById('regPassword').value;
+                const confirm = document.getElementById('regConfirmPwd').value;
+                
+                if (!fullname) {
+                    registerFeedback.innerText = '❌ Full name is required.';
+                    return;
+                }
+                if (!email || !email.includes('@')) {
+                    registerFeedback.innerText = '❌ Valid email address is required.';
+                    return;
+                }
+                if (password.length < 4) {
+                    registerFeedback.innerText = '❌ Password must be at least 4 characters.';
+                    return;
+                }
+                if (password !== confirm) {
+                    registerFeedback.innerText = '❌ Passwords do not match.';
+                    return;
+                }
+                
+                registerFeedback.innerHTML = '<span style="color:#10b981;">✅ Registration successful! Redirecting to sign in...</span>';
+                // After successful registration, slide back to Sign-In mode and pre-fill email
+                setTimeout(() => {
+                    slideToSignIn();
+                    // Pre-fill email field in login form
+                    const loginEmailField = document.getElementById('loginEmail');
+                    if (loginEmailField && email) loginEmailField.value = email;
+                    const loginPwdField = document.getElementById('loginPassword');
+                    if (loginPwdField) loginPwdField.value = '';
+                    alert(`✨ Welcome ${fullname}! Your account has been created. You can now sign in.`);
+                    registerFeedback.innerText = '';
+                }, 1500);
+            });
+        }
+        
+        // Forgot Password demo
+        if (forgotLink) {
+            forgotLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert("🔐 Password reset link would be sent to your email address (demo flow).");
+            });
+        }
+        
+        // Social buttons demo
+        const socialBtns = document.querySelectorAll('.social-btn');
+        socialBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const socialType = btn.innerText.trim();
+                alert(`✨ Continue with ${socialType} authentication (demo).`);
+            });
+        });
+        
+        // Ensure initial state is Sign-In mode (slide 0)
+        sliderWrapper.style.transform = 'translateX(0%)';
+        currentSlide = 'login';
+        
+        // Additional reset on window load for perfect alignment
+        window.addEventListener('load', () => {
+            sliderWrapper.style.transform = 'translateX(0%)';
+            currentSlide = 'login';
+            isAnimating = false;
+        });
+    })();
+</script>
+</body>
+</html>
