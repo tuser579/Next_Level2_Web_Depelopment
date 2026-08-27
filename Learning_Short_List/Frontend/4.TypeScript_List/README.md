@@ -1,0 +1,36 @@
+# 🔷 TypeScript Complete Reference & Topic Guide
+
+A comprehensive, modular guide to TypeScript fundamentals, Type System Architecture, Generics, Utility Types, Conditional Types, and Modern Best Practices.
+
+## 📑 Table of Contents
+
+1. [PRIMITIVE TYPES & TYPE INFERENCE](./1.primitive-types-type-inference.md)
+2. [SPECIAL TYPES: ANY, UNKNOWN, NEVER & VOID](./2.any-unknown-never-void.md)
+3. [ARRAYS, TUPLES & ENUMS](./3.arrays-tuples-enums.md)
+4. [TYPE ALIASES & INTERFACES](./4.type-aliases-interfaces.md)
+5. [UNION, INTERSECTION & DISCRIMINATED UNIONS](./5.union-intersection-types.md)
+6. [FUNCTIONS & FUNCTION OVERLOADS](./6.functions-typing.md)
+7. [OBJECTS, INDEX SIGNATURES & RECORD](./7.objects-index-signatures.md)
+8. [GENERICS FUNDAMENTALS](./8.generics-basics.md)
+9. [GENERIC CONSTRAINTS & KEYOF](./9.generic-constraints.md)
+10. [TYPE NARROWING & BUILT-IN GUARDS](./10.type-narrowing-guards.md)
+11. [USER-DEFINED TYPE GUARDS & ASSERTIONS](./11.custom-type-guards-assertions.md)
+12. [CLASSES & ACCESS MODIFIERS IN TYPESCRIPT](./12.classes-oop-in-ts.md)
+13. [ABSTRACT CLASSES & GETTERS / SETTERS](./13.abstract-classes-getters-setters.md)
+14. [KEYOF, TYPEOF & INDEXED ACCESS TYPES](./14.keyof-typeof-indexed-access.md)
+15. [CONDITIONAL TYPES](./15.conditional-types.md)
+16. [THE 'INFER' KEYWORD IN CONDITIONAL TYPES](./16.infer-keyword.md)
+17. [MAPPED TYPES & KEY REMAPPING](./17.mapped-types.md)
+18. [TEMPLATE LITERAL TYPES & INTRINSICS](./18.template-literal-types.md)
+19. [BUILT-IN UTILITY TYPES (PART 1)](./19.utility-types-part-1.md)
+20. [BUILT-IN UTILITY TYPES (PART 2)](./20.utility-types-part-2.md)
+21. [TYPE ASSERTIONS & 'AS CONST'](./21.type-assertions-casting.md)
+22. [THE 'SATISFIES' OPERATOR (TS 4.9+)](./22.satisfies-operator.md)
+23. [MODULES, TYPE-ONLY IMPORTS & AMBIENT TYPES](./23.modules-namespaces.md)
+24. [TSCONFIG & COMPILER OPTIONS](./24.tsconfig-compiler-options.md)
+25. [DECORATORS (STAGE 3 STANDARD)](./25.decorators-metadata.md)
+26. [DOM & BROWSER TYPES IN TYPESCRIPT](./26.dom-browser-types.md)
+27. [REACT & TYPESCRIPT PATTERNS](./27.react-typescript-patterns.md)
+28. [ASYNC TYPES & CATCH CLAUSE NARROWING](./28.error-handling-asynchronous-ts.md)
+29. [DECLARATION FILES (.D.TS) & DEFINITELY TYPED](./29.declaration-files-ambient-types.md)
+30. [ADVANCED PATTERNS & BEST PRACTICES](./30.advanced-patterns-best-practices.md)

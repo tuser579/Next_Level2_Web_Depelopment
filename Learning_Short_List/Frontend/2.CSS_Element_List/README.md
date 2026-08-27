@@ -1,0 +1,36 @@
+# 🎨 CSS Reference & Properties Guide
+
+A comprehensive, modular guide to CSS3, modern CSS layout systems (Flexbox, Grid, Container Queries), animations, and responsive architecture.
+
+## 📑 Table of Contents
+
+1. [SYNTAX & SELECTORS](./1.syntax-selectors.md)
+2. [CASCADE, INHERITANCE & SPECIFICITY](./2.cascade-inheritance-specificity.md)
+3. [BOX MODEL](./3.box-model.md)
+4. [COLORS & BACKGROUNDS](./4.colors-backgrounds.md)
+5. [TYPOGRAPHY & FONTS](./5.typography-fonts.md)
+6. [FLEXBOX LAYOUT](./6.flexbox.md)
+7. [CSS GRID LAYOUT](./7.grid-layout.md)
+8. [POSITIONING & Z-INDEX](./8.positioning-z-index.md)
+9. [DISPLAY, VISIBILITY & OVERFLOW](./9.display-visibility-overflow.md)
+10. [SIZING & UNITS](./10.sizing-units.md)
+11. [BORDERS, OUTLINES & SHADOWS](./11.borders-outlines-shadows.md)
+12. [TRANSFORMS (2D & 3D)](./12.transforms.md)
+13. [CSS TRANSITIONS](./13.transitions.md)
+14. [CSS ANIMATIONS & @KEYFRAMES](./14.animations-keyframes.md)
+15. [MEDIA QUERIES & RESPONSIVE DESIGN](./15.media-queries-responsive.md)
+16. [CONTAINER QUERIES](./16.container-queries.md)
+17. [CSS VARIABLES (CUSTOM PROPERTIES)](./17.css-variables-custom-properties.md)
+18. [MODERN CSS NESTING](./18.modern-css-nesting.md)
+19. [FILTERS & BACKDROP EFFECTS (GLASSMORPHISM)](./19.filters-backdrop-effects.md)
+20. [CLIP PATH & MASKING](./20.clip-path-masking.md)
+21. [TABLES STYLING](./21.tables-styling.md)
+22. [LISTS & CSS COUNTERS](./22.lists-styling.md)
+23. [CURSOR & USER INTERACTION](./23.cursor-user-interaction.md)
+24. [SCROLLING & SCROLL SNAP](./24.scrolling-scroll-snap.md)
+25. [SVG STYLING IN CSS](./25.svg-styling-clipping.md)
+26. [PRINT MEDIA STYLING](./26.print-media-styling.md)
+27. [ACCESSIBILITY (A11Y) IN CSS](./27.accessibility-a11y-css.md)
+28. [CSS PERFORMANCE OPTIMIZATION](./28.performance-optimization.md)
+29. [CSS ARCHITECTURE & METHODOLOGIES (BEM & RESET)](./29.architecture-methodologies.md)
+30. [BROWSER SUPPORT & MODERN CSS FEATURES](./30.browser-support-future-css.md)

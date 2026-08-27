@@ -1,0 +1,36 @@
+# ⚡ JavaScript (ES6+) Complete Reference Guide
+
+A comprehensive, modern, modular reference covering core JavaScript fundamentals, Object-Oriented Programming, Asynchronous JS, DOM manipulation, Web APIs, and ESNext features.
+
+## 📑 Table of Contents
+
+1. [VARIABLES & DATA TYPES](./1.variables-data-types.md)
+2. [OPERATORS & EXPRESSIONS](./2.operators-expressions.md)
+3. [CONTROL FLOW & CONDITIONALS](./3.control-flow-conditionals.md)
+4. [LOOPS & ITERATION](./4.loops-iteration.md)
+5. [FUNCTIONS, SCOPE & CLOSURES](./5.functions-scope.md)
+6. [OBJECTS & OBJECT STATIC METHODS](./6.objects-object-methods.md)
+7. [ARRAYS & MUTATION / ACCESS METHODS](./7.arrays-basic-methods.md)
+8. [ARRAY ITERATION & HIGHER-ORDER METHODS](./8.array-iteration-higher-order.md)
+9. [STRINGS & TEMPLATE LITERALS](./9.strings-template-literals.md)
+10. [NUMBERS, MATH & BIGINT](./10.numbers-math-bigint.md)
+11. [DATES, TIME & INTL API](./11.dates-time-intl.md)
+12. [SETS, MAPS, WEAKSETS & WEAKMAPS](./12.sets-maps-weaksets-weakmaps.md)
+13. [DESTRUCTURING, REST & SPREAD](./13.destructuring-rest-spread.md)
+14. [CLASSES & OBJECT-ORIENTED PROGRAMMING](./14.classes-oop.md)
+15. [PROTOTYPES & PROTOTYPE CHAIN](./15.prototypes-inheritance.md)
+16. [THE 'THIS' KEYWORD, CALL, APPLY & BIND](./16.this-keyword-call-apply-bind.md)
+17. [ERROR HANDLING & DEBUGGING](./17.error-handling-debugging.md)
+18. [ASYNC JS & THE EVENT LOOP](./18.asynchronous-js-event-loop.md)
+19. [PROMISES & PROMISE COMBINATORS](./19.promises-promise-combinators.md)
+20. [ASYNC / AWAIT & TOP-LEVEL AWAIT](./20.async-await.md)
+21. [DOM SELECTION & TRAVERSAL](./21.dom-selection-traversal.md)
+22. [DOM CREATION & MANIPULATION](./22.dom-manipulation-creation.md)
+23. [DOM ATTRIBUTES, CLASSES & STYLES](./23.dom-attributes-classes-styles.md)
+24. [EVENTS & EVENT DELEGATION](./24.events-event-delegation.md)
+25. [BROWSER STORAGE & WEB APIS](./25.browser-apis-storage.md)
+26. [FETCH API, AJAX & ABORTCONTROLLER](./26.fetch-api-ajax-http.md)
+27. [ES MODULES (IMPORT & EXPORT)](./27.es-modules-import-export.md)
+28. [GENERATORS & ITERATOR PROTOCOLS](./28.generators-iterators.md)
+29. [PERFORMANCE, DEBOUNCE, THROTTLE & WORKERS](./29.memory-performance-optimization.md)
+30. [MODERN JAVASCRIPT FEATURES (ES2020 - ES2026+)](./30.modern-js-features-es2020-plus.md)

@@ -1,0 +1,36 @@
+# ⚛️🔷 React in TypeScript Complete Reference Guide
+
+A comprehensive, modular guide to React 18 & 19 with TypeScript 5+, Component Prop Typing, Hooks Typing, Generic Components, Context Architecture, State Management, and Enterprise Patterns.
+
+## 📑 Table of Contents
+
+1. [TYPING COMPONENT PROPS & RETURN TYPES](./1.component-props-typing.md)
+2. [OPTIONAL PROPS & DEFAULT VALUES](./2.optional-default-props.md)
+3. [TYPING CHILDREN & RENDER PROPS](./3.typing-children-slots.md)
+4. [NATIVE HTML PROPS & POLYMORPHIC COMPONENTS](./4.html-element-props-polymorphism.md)
+5. [TYPING REACT EVENTS & HANDLERS](./5.typing-events-handlers.md)
+6. [TYPING THE USESTATE HOOK](./6.usestate-in-typescript.md)
+7. [TYPING USEEFFECT & CLEANUP](./7.useeffect-lifecycle-typing.md)
+8. [USEREF: DOM REFS VS MUTABLE VALUES](./8.useref-types-dom-vs-mutable.md)
+9. [TYPING USEMEMO & USECALLBACK](./9.usememo-usecallback-typing.md)
+10. [TYPING CONTEXT API & CUSTOM HOOKS](./10.usecontext-with-typescript.md)
+11. [TYPING USEREDUCER WITH DISCRIMINATED UNIONS](./11.usereducer-discriminated-unions.md)
+12. [TYPING CUSTOM HOOKS & TUPLE RETURNS](./12.custom-hooks-with-typescript.md)
+13. [GENERIC REACT COMPONENTS](./13.generic-components.md)
+14. [TYPING FORWARDREF & USEIMPERATIVEHANDLE](./14.forwardref-and-useimperativehandle.md)
+15. [TYPING FORMS & CONTROLLED INPUTS](./15.typing-forms-controlled-components.md)
+16. [REACT ROUTER & TYPESCRIPT](./16.react-router-with-typescript.md)
+17. [TYPING ERROR BOUNDARIES](./17.error-boundary-typing.md)
+18. [TYPING REACT.LAZY & SUSPENSE](./18.react-lazy-suspense-typing.md)
+19. [TYPING USETRANSITION & USEDEFERREDVALUE](./19.concurrency-usetransition-typing.md)
+20. [REACT 19: TYPING ACTIONS & USEACTIONSTATE](./20.react-19-actions-and-useactionstate.md)
+21. [REACT 19: TYPING THE 'USE' API](./21.react-19-use-api-typing.md)
+22. [TANSTACK QUERY (REACT QUERY) & TYPESCRIPT](./22.tanstack-query-with-typescript.md)
+23. [GLOBAL STATE: TYPING ZUSTAND & REDUX TOOLKIT](./23.state-management-zustand-redux-ts.md)
+24. [DISCRIMINATED UNION PROPS](./24.discriminated-union-props.md)
+25. [REACT PROPS UTILITY TYPES](./25.component-props-utility-types.md)
+26. [TYPING STYLES, CSS MODULES & CLASSNAMES](./26.css-modules-and-style-props.md)
+27. [TYPING REACT PORTALS & DIALOGS](./27.portal-and-dialog-typing.md)
+28. [TYPING IN REACT TESTING LIBRARY & VITEST](./28.testing-types-react-testing-library.md)
+29. [TSCONFIG FOR REACT & STRICT FLAGS](./29.strict-mode-and-compiler-flags.md)
+30. [ADVANCED REACT & TS ARCHITECTURAL PATTERNS](./30.advanced-react-ts-patterns.md)

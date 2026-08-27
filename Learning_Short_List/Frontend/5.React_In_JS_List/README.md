@@ -1,0 +1,36 @@
+# ⚛️ React in JavaScript Complete Reference Guide
+
+A comprehensive, modular guide to React (React 18 & 19), Core JSX, Hooks, State Management, Data Fetching, Router, and Modern Production Patterns in JavaScript.
+
+## 📑 Table of Contents
+
+1. [JSX SYNTAX & CORE RULES](./1.jsx-syntax-rules.md)
+2. [COMPONENTS, PROPS & CHILDREN](./2.components-props.md)
+3. [CONDITIONAL RENDERING](./3.conditional-rendering.md)
+4. [RENDERING LISTS & THE 'KEY' PROP](./4.rendering-lists-keys.md)
+5. [EVENT HANDLING & SYNTHETICEVENT](./5.event-handling.md)
+6. [THE USESTATE HOOK (PRIMITIVES & OBJECTS)](./6.usestate-hook.md)
+7. [THE USEEFFECT HOOK & LIFECYCLE](./7.useeffect-lifecycle.md)
+8. [THE USEREF HOOK](./8.useref-dom-access.md)
+9. [USEMEMO & USECALLBACK HOOKS](./9.usememo-usecallback.md)
+10. [CONTEXT API & THE USECONTEXT HOOK](./10.usecontext-context-api.md)
+11. [THE USEREDUCER HOOK](./11.usereducer-hook.md)
+12. [CREATING CUSTOM HOOKS](./12.custom-hooks.md)
+13. [FORMS & CONTROLLED COMPONENTS](./13.forms-controlled-components.md)
+14. [UNCONTROLLED COMPONENTS & FORMDATA](./14.uncontrolled-components-formdata.md)
+15. [LIFTING STATE UP](./15.lifting-state-up.md)
+16. [COMPONENT COMPOSITION & SLOTS](./16.component-composition-children.md)
+17. [REACT.MEMO & PURE COMPONENTS](./17.react-memo-pure-components.md)
+18. [REACT PORTALS](./18.react-portals.md)
+19. [ERROR BOUNDARIES](./19.error-boundaries.md)
+20. [CODE-SPLITTING: REACT.LAZY & SUSPENSE](./20.react-lazy-suspense.md)
+21. [CONCURRENCY: USETRANSITION & USEDEFERREDVALUE](./21.react-transitions-deferred-value.md)
+22. [USEID, USELAYOUTEFFECT & USEIMPERATIVEHANDLE](./22.useid-uselayouteffect-useimperativehandle.md)
+23. [REACT 19: ACTIONS, USEACTIONSTATE & USEOPTIMISTIC](./23.react-19-actions-and-useactionstate.md)
+24. [REACT 19: THE 'USE' API & ASYNC SUSPENSE](./24.react-19-use-hook-and-promises.md)
+25. [STYLING IN REACT (CSS MODULES, INLINE & TAILWIND)](./25.styling-in-react.md)
+26. [DATA FETCHING PATTERNS & ABORTCONTROLLER](./26.data-fetching-patterns.md)
+27. [ROUTING: REACT ROUTER (V6 & V7)](./27.client-side-routing-react-router.md)
+28. [GLOBAL STATE MANAGEMENT (ZUSTAND & REDUX)](./28.state-management-patterns.md)
+29. [REACT PERFORMANCE OPTIMIZATION](./29.react-performance-optimization.md)
+30. [REACT BEST PRACTICES & SECURITY](./30.react-best-practices-security.md)

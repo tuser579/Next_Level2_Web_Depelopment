@@ -1,0 +1,36 @@
+# 📚 HTML Reference Elements & Topics
+
+A modular, comprehensive guide to HTML5 elements, attributes, APIs, and best practices.
+
+## 📑 Table of Contents
+
+1. [DOCUMENT STRUCTURE](./1.document-structure.md)
+2. [HEAD ELEMENTS](./2.head-elements.md)
+3. [TEXT CONTENT](./3.text-content.md)
+4. [TEXT FORMATTING](./4.text-formatting.md)
+5. [LINKS & NAVIGATION](./5.links-navigation.md)
+6. [IMAGES & MEDIA](./6.images-media.md)
+7. [LISTS](./7.lists.md)
+8. [TABLES](./8.tables.md)
+9. [FORMS](./9.forms.md)
+10. [SEMANTIC HTML5](./10.semantic-html5.md)
+11. [INTERACTIVE ELEMENTS](./11.interactive-elements.md)
+12. [SCRIPTING](./12.scripting.md)
+13. [EMBEDDED CONTENT](./13.embedded-content.md)
+14. [WEB COMPONENTS](./14.web-components.md)
+15. [GLOBAL ATTRIBUTES](./15.global-attributes.md)
+16. [EVENT HANDLERS](./16.event-handlers.md)
+17. [META TAGS](./17.meta-tags.md)
+18. [CANVAS & SVG](./18.canvas-svg.md)
+19. [STORAGE & DATA](./19.storage-data.md)
+20. [BROWSER APIs & FEATURES](./20.browser-apis-features.md)
+21. [BEST PRACTICES](./21.best-practices.md)
+22. [HTML5 NEW ELEMENTS](./22.html5-new-elements.md)
+23. [DEPRECATED ELEMENTS (Avoid)](./23.deprecated-elements-avoid.md)
+24. [CHARACTER ENTITIES](./24.character-entities.md)
+25. [HTML VALIDATION](./25.html-validation.md)
+26. [RESPONSIVE DESIGN](./26.responsive-design.md)
+27. [ACCESSIBILITY (A11Y)](./27.accessibility-a11y.md)
+28. [PERFORMANCE OPTIMIZATION](./28.performance-optimization.md)
+29. [SEO ELEMENTS](./29.seo-elements.md)
+30. [BROWSER SUPPORT & COMPATIBILITY](./30.browser-support-compatibility.md)
