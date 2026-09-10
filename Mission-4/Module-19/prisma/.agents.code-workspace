@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{
+			"path": "../.agents"
+		},
+		{
+			"path": "../.claude"
+		},
+		{
+			"path": "../.git"
+		},
+		{
+			"path": "../.windsurf"
+		},
+		{
+			"path": "../generated"
+		},
+		{
+			"path": "../node_modules"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../src"
+		}
+	]
+}
