@@ -12,19 +12,69 @@ datasource db {
   provider = "postgresql"
 }
 
-model User { 
-  id    Int     @id @default(autoincrement()) 
-  email String  @unique
-  name  String?
-  posts Post[]
-} 
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-model Post { 
-  id        Int     @id @default(autoincrement()) 
+  // Relations 
+  posts   Post[]
+  profile Profile?
+
+  @@index([email])
+  @@map("users")
+}
+
+model Profile {
+  id     Int     @id @default(autoincrement())
+  bio    String? @db.Text
+  avatar String?
+  userId Int     @unique
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Post {
+  id        Int        @id @default(autoincrement())
   title     String
   content   String?
-  published Boolean @default(false) 
-  author    User    @relation(fields: [authorId], references: [id]) 
-  authorId  Int
-} 
+  status    PostStatus @default(DRAFT)
+  published Boolean @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
+  // FK
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  Int
+
+  // Many to Many relation
+  tags Tag[]
+
+  @@index([authorId])
+  @@index([status, createdAt])
+  @@map("posts")
+}
+
+model Tag {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique @db.VarChar(50)
+  posts Post[]
+
+  @@map("tags")
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
