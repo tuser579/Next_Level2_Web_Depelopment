@@ -14,17 +14,15 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
-  email     String   @unique
+  email     String   @unique   // ✅ index already here
   name      String?
   role      Role     @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations 
   posts   Post[]
   profile Profile?
 
-  @@index([email])
   @@map("users")
 }
 
