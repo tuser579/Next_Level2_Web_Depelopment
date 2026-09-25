@@ -7,7 +7,7 @@ import { authRoutes } from "./modules/auth/auth.route";
 const app: Application = express();
 
 app.use(cors({
-    origin: "http://localhost:5000",
+    origin: "http://localhost:5000", 
     credentials: true
 }));
 

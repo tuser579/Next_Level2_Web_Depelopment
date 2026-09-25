@@ -3,11 +3,11 @@ import { prisma } from "../../lib/prisma";
 import bcrypt from "bcryptjs";
 import { config } from "../../config";
 import { jwtUtils } from "../../utils/jwt";
-import { SignOptions } from "jsonwebtoken";
+import { JwtPayload, SignOptions } from "jsonwebtoken";
 
 const loginUser = async (payload: ILoginPayload) => {
 
-    const {email, password} = payload;
+    const { email, password } = payload;
 
     // check user
     // const user = await prisma.user.findUnique({
@@ -35,11 +35,13 @@ const loginUser = async (payload: ILoginPayload) => {
         throw new Error("Invalid password");
     }
 
+    const { id, name, role } = user;
+
     const jwtPayload =  {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role
+        id,
+        name,
+        email,
+        role
     }
 
     // create access token
@@ -80,6 +82,44 @@ const loginUser = async (payload: ILoginPayload) => {
     }    
 }
 
+const refreshToken = async(token:string) => {
+    const verifiedRefreshToken = jwtUtils.verifyToken(token, config.jwt_refresh_secret as string);
+
+    if(!verifiedRefreshToken.success) {
+        throw new Error(verifiedRefreshToken.error);
+    }
+
+    const { id } = verifiedRefreshToken.data as JwtPayload;
+
+    const user = await prisma.user.findUniqueOrThrow({
+        where: {id}
+    })
+
+    if(user.activeStatus === "BLOCKED") {
+        throw new Error("Your account has been blocked. Please contact the admin for assistance.");
+    }
+
+    const { name, email, role } = user;
+
+    const jwtPayload =  {
+        id,
+        name,
+        email,
+        role
+    }
+
+    const accessToken = jwtUtils.createToken(
+        jwtPayload, 
+        config.jwt_access_secret as string, 
+        config.jwt_access_expires_in as SignOptions
+    )
+
+    return {
+        accessToken
+    }
+}
+
 export const authService = {
-    loginUser
+    loginUser,
+    refreshToken
 }
