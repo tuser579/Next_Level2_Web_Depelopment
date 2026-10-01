@@ -47,9 +47,6 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
         data: createdUser
     });
 
-}, { 
-    statusCode: httpStatus.CONFLICT, 
-    message: 'Failed to register because user already exist!' 
 });
 
 const getMyProfile = catchAsync( async (req: Request, res: Response ) => {

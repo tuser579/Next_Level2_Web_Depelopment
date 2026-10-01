@@ -9,12 +9,12 @@ const createUserIntoDB = async (payload:ICreateUserPayload) => {
     const {name, email, password, profilePhoto} = payload;
 
     // check user is exists
-    const isUserExist = await prisma.user.findUnique({where: {email}});
+    const isUserExist = await prisma.user.findUnique({where: { email }});
 
     // throw error if user is exists
-    if (isUserExist) {
-        throw new Error("User already exists");
-    }
+    // if (isUserExist) {
+    //     throw new Error("User already exists");
+    // }
 
     // hash password
     const hashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds));

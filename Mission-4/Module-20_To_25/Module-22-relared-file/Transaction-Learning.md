@@ -107,13 +107,13 @@ Prisma gives you **two ways** to use transactions:
 
 ```
                     ┌─────────────────────────────────┐
-                    │     prisma.$transaction()        │
+                    │    prisma.$transaction()        │
                     └──────────────┬──────────────────┘
                                    │
                ┌───────────────────┴───────────────────┐
                │                                       │
     ┌──────────▼──────────┐              ┌─────────────▼──────────┐
-    │  Sequential / Batch │              │  Interactive Transaction │
+    │  Sequential / Batch │              │ Interactive Transaction │
     │  prisma.$transaction│              │  prisma.$transaction    │
     │  ([op1, op2, op3])  │              │  (async (tx) => { ... })│
     └─────────────────────┘              └────────────────────────┘
@@ -170,7 +170,7 @@ const operations = [
 - No conditional logic needed between steps
 - Operations don't depend on each other's return values within the transaction
 
----
+--- 
 
 ## 6. Interactive Transactions (Most Powerful)
 

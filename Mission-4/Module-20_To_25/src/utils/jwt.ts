@@ -25,10 +25,9 @@ const verifyToken = (token: string, secret: string) => {
     } catch(error: any) {
         return {
             success: false,
-            error: error.message
+            // error: error.message,   // message string (for display if needed)
+            originalError: error    // ✅ keep the original error object (preserves .name, .stack)
         };
-        // console.log("Token Verified failed: ", error);
-        // throw new Error(error.message);
     }
 }
 
