@@ -86,7 +86,8 @@ const refreshToken = async(token:string) => {
     const verifiedRefreshToken = jwtUtils.verifyToken(token, config.jwt_refresh_secret as string);
 
     if(!verifiedRefreshToken.success) {
-        throw new Error(verifiedRefreshToken.error);
+        // throw new Error(verifiedRefreshToken.error);
+        throw verifiedRefreshToken.originalError;
     }
 
     const { id } = verifiedRefreshToken.data as JwtPayload;
