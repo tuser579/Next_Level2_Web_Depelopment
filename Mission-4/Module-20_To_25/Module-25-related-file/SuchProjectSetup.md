@@ -1,7 +1,8 @@
 # 🚀 Complete Project Setup Guide: Enterprise Node.js, Express, TypeScript & Prisma ORM
 
 > **The Definitive Scaffolding Blueprint for Modern Backend Projects**  
-> Learn how to set up a brand-new backend project from scratch using the exact architecture, patterns, and conventions of this production-grade repository (`catchAsync`, `sendResponse`, Prisma multi-file schemas, role-based auth, and Stripe integration).
+> Learn how to set up a brand-new backend project from scratch using the exact architecture, patterns, and conventions of this production-grade repository (`catchAsync`, `sendResponse`, Prisma multi-file schemas, role-based auth, and Stripe integration).  
+> Includes **complete step-by-step instructions for Local CLI, Remote Listeners, Remote CLI, and testing both Development & Production webhook systems**.
 
 ---
 
@@ -17,11 +18,13 @@
 8. [Phase 6: Singletons Setup (Prisma & Stripe)](#phase-6-singletons-setup-prisma--stripe)
 9. [Phase 7: Core Utilities (`catchAsync`, `sendResponse`, `jwt`)](#phase-7-core-utilities-catchasync-sendresponse-jwt)
 10. [Phase 8: Production Middlewares (`auth`, `notFound`, `globalErrorHandler`)](#phase-8-production-middlewares-auth-notfound-globalerrorhandler)
-11. [Phase 9: Building a Complete Feature Module (Blueprint Pattern)](#phase-9-building-a-complete-feature-module-blueprint-pattern)
-12. [Phase 10: Express Application Assembly (`src/app.ts`)](#phase-10-express-application-assembly-srcappts)
-13. [Phase 11: Server Bootstrap & Lifecycle (`src/server.ts`)](#phase-11-server-bootstrap--lifecycle-srcserverts)
-14. [Phase 12: Running, Testing & Verifying Your New Backend](#phase-12-running-testing--verifying-your-new-backend)
-15. [Phase 13: Production Best Practices & Common Setup Traps](#phase-13-production-best-practices--common-setup-traps)
+11. [Phase 9: Building Feature Modules (User & Payment Domains)](#phase-9-building-feature-modules-user--payment-domains)
+12. [Phase 10: Complete Webhook System: Codebase Handling for Dev & Prod](#phase-10-complete-webhook-system-codebase-handling-for-dev--prod)
+13. [Phase 11: Remote CLI, Remote Listener & Production Ingress](#phase-11-remote-cli-remote-listener--production-ingress)
+14. [Phase 12: Express Application Assembly (`src/app.ts`)](#phase-12-express-application-assembly-srcappts)
+15. [Phase 13: Server Bootstrap & Lifecycle (`src/server.ts`)](#phase-13-server-bootstrap--lifecycle-srcserverts)
+16. [Phase 14: How to Test Both Development & Production Systems](#phase-14-how-to-test-both-development--production-systems)
+17. [Phase 15: Production Best Practices & Common Setup Traps](#phase-15-production-best-practices--common-setup-traps)
 
 ---
 
@@ -44,6 +47,7 @@ This architecture is optimized for **speed, maintainability, type safety, and sc
 - **Zero-Boilerplate Async:** Controllers wrapped in `catchAsync` to avoid repetitive `try/catch` blocks.
 - **Standardized API Envelope:** Every response formatted via `sendResponse` (`{ success, statusCode, message, data, meta }`).
 - **Feature Modules:** Self-contained domains (`auth`, `user`, `post`, `subscription`, `payment`).
+- **Universal Webhook Pipeline:** Identical codebase handles both local CLI events in Development and cloud dispatches in Production.
 
 ---
 
@@ -58,7 +62,9 @@ my-backend-project/
 │   └── schema/                     # Multi-file Prisma schemas
 │       ├── schema.prisma           # Datasource and Client Generator
 │       ├── enums.prisma            # Global system enums (Role, Status, etc.)
-│       └── user.prisma             # User entity model
+│       ├── user.prisma             # User entity model
+│       ├── subscription.prisma     # Subscription model
+│       └── webhookLog.prisma       # Idempotency log table
 ├── src/
 │   ├── config/
 │   │   └── index.ts                # Centralized environment variable validator
@@ -74,11 +80,15 @@ my-backend-project/
 │   │   ├── sendResponse.ts         # Unified JSON response wrapper
 │   │   └── jwt.ts                  # JWT token creation and verification
 │   ├── modules/
-│   │   └── user/                   # Example Domain Module
-│   │       ├── user.interface.ts   # TypeScript interfaces & types
-│   │       ├── user.service.ts     # Business logic & Prisma queries
-│   │       ├── user.controller.ts  # HTTP request/response handler
-│   │       └── user.route.ts       # Express endpoint definitions
+│   │   ├── user/                   # User Domain Module
+│   │   │   ├── user.interface.ts
+│   │   │   ├── user.service.ts
+│   │   │   ├── user.controller.ts
+│   │   │   └── user.route.ts
+│   │   └── payment/                # Payment & Webhook Domain Module
+│   │       ├── payment.service.ts
+│   │       ├── payment.controller.ts
+│   │       └── payment.route.ts
 │   ├── app.ts                      # Express application setup & middleware chain
 │   └── server.ts                   # Process bootstrap & port listener
 ├── .env                            # Secret environment variables (git-ignored)
@@ -176,12 +186,13 @@ New-Item -ItemType Directory -Force -Path `
   "src/lib", `
   "src/middlewares", `
   "src/utils", `
-  "src/modules/user"
+  "src/modules/user", `
+  "src/modules/payment"
 ```
 
 ### For macOS / Linux (Bash):
 ```bash
-mkdir -p prisma/schema src/config src/lib src/middlewares src/utils src/modules/user
+mkdir -p prisma/schema src/config src/lib src/middlewares src/utils src/modules/user src/modules/payment
 ```
 
 ---
@@ -218,6 +229,7 @@ JWT_REFRESH_EXPIRES_IN="7d"
 # Stripe Secrets
 STRIPE_SECRET_KEY="your_stripe_secret_key_here"
 STRIPE_WEBHOOK_SECRET="your_stripe_webhook_secret_here"
+STRIPE_WEBHOOK_SECRET_ROLLING=""
 STRIPE_PRODUCT_PRICE_ID="your_stripe_product_price_id_here"
 ```
 
@@ -247,6 +259,7 @@ export const config = {
     jwt_refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
     stripe_secret_key: process.env.STRIPE_SECRET_KEY!,
     stripe_webhook_secret: process.env.STRIPE_WEBHOOK_SECRET!,
+    stripe_webhook_secret_rolling: process.env.STRIPE_WEBHOOK_SECRET_ROLLING || "",
     stripe_product_price_id: process.env.STRIPE_PRODUCT_PRICE_ID!,
 };
 ```
@@ -255,7 +268,7 @@ export const config = {
 
 ## 7. Phase 5: Prisma ORM & Database Setup (Multi-File Schema)
 
-This project uses Prisma's modern multi-file schema feature where separate `.prisma` files exist inside `prisma/schema/`.
+This project uses Prisma's multi-file schema feature where separate `.prisma` files exist inside `prisma/schema/`.
 
 ### Step 1: Datasource & Client Setup (`prisma/schema/schema.prisma`)
 ```prisma
@@ -295,21 +308,60 @@ enum SubscriptionStatus {
 ```prisma
 // prisma/schema/user.prisma
 model User {
-  id           String       @id @default(uuid())
-  email        String       @unique
+  id           String        @id @default(uuid())
+  email        String        @unique
   name         String
   password     String
-  role         Role         @default(USER)
-  status       ActiveStatus @default(ACTIVE)
+  role         Role          @default(USER)
+  status       ActiveStatus  @default(ACTIVE)
 
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  subscription Subscription?
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@map("users")
 }
 ```
 
-### Step 4: Run Initial Database Migration
+### Step 4: Subscription Entity Model (`prisma/schema/subscription.prisma`)
+```prisma
+// prisma/schema/subscription.prisma
+model Subscription {
+  id                   String             @id @default(uuid())
+  userId               String             @unique
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  currentPeriodEnd     DateTime
+  status               SubscriptionStatus @default(ACTIVE)
+
+  stripeCustomerId     String             @unique
+  stripeSubscriptionId String             @unique
+
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  @@index([userId])
+  @@index([stripeSubscriptionId])
+  @@map("subscriptions")
+}
+```
+
+### Step 5: Webhook Idempotency Log (`prisma/schema/webhookLog.prisma`)
+```prisma
+// prisma/schema/webhookLog.prisma
+model WebhookLog {
+  id          String   @id @default(uuid())
+  eventId     String   @unique // "evt_xxx" from Stripe
+  eventType   String
+  processedAt DateTime @default(now())
+
+  @@index([eventId])
+  @@map("webhook_logs")
+}
+```
+
+### Step 6: Run Initial Database Migration
 Make sure PostgreSQL is running locally, then execute:
 ```bash
 npx prisma migrate dev --name init_schema
@@ -427,7 +479,6 @@ export const jwtUtils = {
 ## 10. Phase 8: Production Middlewares (`auth`, `notFound`, `globalErrorHandler`)
 
 ### 1. Authentication & Role Guard (`src/middlewares/auth.ts`)
-Includes global Express Request declaration merging for `req.user`.
 ```ts
 // src/middlewares/auth.ts
 import { NextFunction, Request, Response } from "express";
@@ -437,7 +488,6 @@ import { catchAsync } from "../utils/catchAsync";
 import { jwtUtils } from "../utils/jwt";
 import { config } from "../config";
 
-// Declaration merging to strongly-type req.user across Express
 declare global {
     namespace Express {
         interface Request {
@@ -469,7 +519,6 @@ export const auth = (...requiredRoles: Role[]) => {
 
         const decodedUser = verified.data as { id: string; email: string; role: Role };
 
-        // Role-Based Access Control (RBAC)
         if (requiredRoles.length > 0 && !requiredRoles.includes(decodedUser.role)) {
             return res.status(httpStatus.FORBIDDEN).json({
                 success: false,
@@ -512,7 +561,6 @@ export const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => 
     let statusCode = err.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
     let message = err.message || "Internal Server Error";
 
-    // JWT Token Expiration Mapping
     if (err.name === "TokenExpiredError") {
         statusCode = httpStatus.UNAUTHORIZED;
         message = "Session token expired. Please log in again.";
@@ -529,13 +577,12 @@ export const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => 
 
 ---
 
-## 11. Phase 9: Building a Complete Feature Module (Blueprint Pattern)
+## 11. Phase 9: Building Feature Modules (User & Payment Domains)
 
-Every business feature in this architecture is built across 4 files inside `src/modules/<feature>/`. Here is the complete implementation of the `user` module:
+### 1. The User Module (`src/modules/user/`)
 
-### 1. `src/modules/user/user.interface.ts`
+#### A. Interface (`src/modules/user/user.interface.ts`)
 ```ts
-// src/modules/user/user.interface.ts
 export type TCreateUserPayload = {
     name: string;
     email: string;
@@ -543,9 +590,8 @@ export type TCreateUserPayload = {
 };
 ```
 
-### 2. `src/modules/user/user.service.ts`
+#### B. Service (`src/modules/user/user.service.ts`)
 ```ts
-// src/modules/user/user.service.ts
 import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import { config } from "../../config";
@@ -574,13 +620,7 @@ const createUser = async (payload: TCreateUserPayload) => {
 
 const getAllUsers = async () => {
     return await prisma.user.findMany({
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
-            createdAt: true,
-        },
+        select: { id: true, name: true, email: true, role: true, createdAt: true },
     });
 };
 
@@ -590,9 +630,8 @@ export const userServices = {
 };
 ```
 
-### 3. `src/modules/user/user.controller.ts`
+#### C. Controller (`src/modules/user/user.controller.ts`)
 ```ts
-// src/modules/user/user.controller.ts
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync";
@@ -627,9 +666,8 @@ export const userController = {
 };
 ```
 
-### 4. `src/modules/user/user.route.ts`
+#### D. Route (`src/modules/user/user.route.ts`)
 ```ts
-// src/modules/user/user.route.ts
 import { Router } from "express";
 import { userController } from "./user.controller";
 import { auth } from "../../middlewares/auth";
@@ -645,7 +683,239 @@ export const userRoutes = router;
 
 ---
 
-## 12. Phase 10: Express Application Assembly (`src/app.ts`)
+## 12. Phase 10: Complete Webhook System: Codebase Handling for Dev & Prod
+
+This service handles both **Local CLI** in Development and **Cloud Dispatch** in Production without requiring code modifications:
+
+### 1. `src/modules/payment/payment.service.ts`
+```ts
+// src/modules/payment/payment.service.ts
+import Stripe from "stripe";
+import { config } from "../../config";
+import { prisma } from "../../lib/prisma";
+import { stripe } from "../../lib/stripe";
+import { SubscriptionStatus } from "../../../generated/prisma/enums";
+
+/**
+ * 1. Create Subscription Checkout Session
+ */
+const createCheckoutSession = async (userId: string) => {
+    return await prisma.$transaction(async (tx) => {
+        const user = await tx.user.findUniqueOrThrow({
+            where: { id: userId },
+            include: { subscription: true }
+        });
+
+        let customerId = user.subscription?.stripeCustomerId;
+
+        if (!customerId) {
+            const customer = await stripe.customers.create({
+                email: user.email,
+                name: user.name,
+                metadata: { userId: user.id }
+            });
+            customerId = customer.id;
+        }
+
+        const session = await stripe.checkout.sessions.create({
+            mode: "subscription",
+            customer: customerId,
+            allowed_payment_method_types: ["card"],
+            line_items: [{ price: config.stripe_product_price_id, quantity: 1 }],
+            success_url: `${config.app_url}/billing?success=true`,
+            cancel_url: `${config.app_url}/billing?canceled=true`,
+            metadata: { userId }
+        });
+
+        return { paymentUrl: session.url };
+    });
+};
+
+/**
+ * 2. Universal Webhook Handler (Supports Local CLI & Production Remote Listener)
+ */
+const handleWebhook = async (payload: Buffer, signature: string) => {
+    let event: Stripe.Event;
+
+    // A. Verify Signature with Zero-Downtime Secret Rotation Fallback
+    try {
+        event = stripe.webhooks.constructEvent(payload, signature, config.stripe_webhook_secret);
+    } catch (primaryErr: any) {
+        if (config.stripe_webhook_secret_rolling) {
+            try {
+                event = stripe.webhooks.constructEvent(payload, signature, config.stripe_webhook_secret_rolling);
+            } catch (rollingErr: any) {
+                throw new Error(`Webhook verification error: ${primaryErr.message}`);
+            }
+        } else {
+            throw new Error(`Webhook verification error: ${primaryErr.message}`);
+        }
+    }
+
+    // B. Production Idempotency Check
+    const alreadyHandled = await prisma.webhookLog.findUnique({
+        where: { eventId: event.id }
+    });
+
+    if (alreadyHandled) {
+        console.log(`ℹ️ [Webhook] Duplicate event ${event.id} received. Skipping.`);
+        return;
+    }
+
+    await prisma.webhookLog.create({
+        data: { eventId: event.id, eventType: event.type }
+    });
+
+    // C. Event Dispatcher
+    switch (event.type) {
+        case "checkout.session.completed": {
+            const session = event.data.object as Stripe.Checkout.Session;
+            const userId = session.metadata?.userId;
+            const stripeCustomerId = session.customer as string;
+            const stripeSubscriptionId = session.subscription as string;
+
+            if (userId && stripeCustomerId && stripeSubscriptionId) {
+                const sub = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+                const currentPeriodEnd = new Date(sub.current_period_end * 1000);
+
+                await prisma.subscription.upsert({
+                    where: { userId },
+                    update: { stripeCustomerId, stripeSubscriptionId, currentPeriodEnd, status: SubscriptionStatus.ACTIVE },
+                    create: { userId, stripeCustomerId, stripeSubscriptionId, currentPeriodEnd, status: SubscriptionStatus.ACTIVE },
+                });
+                console.log(`🎉 [Webhook] Subscription activated for user ${userId}`);
+            }
+            break;
+        }
+
+        case "customer.subscription.deleted": {
+            const sub = event.data.object as Stripe.Subscription;
+            await prisma.subscription.updateMany({
+                where: { stripeSubscriptionId: sub.id },
+                data: { status: SubscriptionStatus.CANCELLED }
+            });
+            console.log(`🛑 [Webhook] Subscription ${sub.id} cancelled`);
+            break;
+        }
+
+        default:
+            console.log(`ℹ️ [Webhook] Unhandled event type: ${event.type}`);
+    }
+};
+
+export const paymentServices = {
+    createCheckoutSession,
+    handleWebhook,
+};
+```
+
+### 2. `src/modules/payment/payment.controller.ts`
+```ts
+// src/modules/payment/payment.controller.ts
+import { Request, Response } from "express";
+import httpStatus from "http-status";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
+import { paymentServices } from "./payment.service";
+
+const createCheckoutSession = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.user?.id as string;
+    const result = await paymentServices.createCheckoutSession(userId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Checkout session created successfully",
+        data: result,
+    });
+});
+
+const handleWebhook = catchAsync(async (req: Request, res: Response) => {
+    const payload = req.body as Buffer;
+    const signature = req.headers["stripe-signature"] as string;
+
+    if (!signature) {
+        return res.status(httpStatus.BAD_REQUEST).json({
+            success: false,
+            message: "Missing stripe-signature header",
+        });
+    }
+
+    await paymentServices.handleWebhook(payload, signature);
+
+    // Fast HTTP 200 acknowledgement
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Webhook processed successfully",
+        data: null,
+    });
+});
+
+export const paymentController = {
+    createCheckoutSession,
+    handleWebhook,
+};
+```
+
+### 3. `src/modules/payment/payment.route.ts`
+```ts
+// src/modules/payment/payment.route.ts
+import { Router } from "express";
+import { paymentController } from "./payment.controller";
+import { auth } from "../../middlewares/auth";
+import { Role } from "../../../generated/prisma/enums";
+
+const router = Router();
+
+router.post("/checkout", auth(Role.USER, Role.ADMIN), paymentController.createCheckoutSession);
+router.post("/webhook", paymentController.handleWebhook);
+
+export const paymentRoutes = router;
+```
+
+---
+
+## 13. Phase 11: Remote CLI, Remote Listener & Production Ingress
+
+Understanding how webhooks travel into your system across different deployment stages:
+
+```mermaid
+flowchart TD
+    subgraph STAGE_1["1. Local Dev Machine"]
+        LocalCLI[Stripe CLI] --> |HTTP POST| LocalExpress[localhost:5000]
+    end
+
+    subgraph STAGE_2["2. Remote Staging Server"]
+        RemoteCLI[Stripe CLI with --forward-to] --> |HTTPS POST| StagingServer[staging-api.yourdomain.com]
+    end
+
+    subgraph STAGE_3["3. Production Cloud"]
+        StripeCloud[Stripe Webhook Dispatcher] --> |Direct HTTPS POST| ProdServer[api.yourdomain.com]
+    end
+```
+
+### 1. Local Development (Local Stripe CLI)
+- **Ingress:** `stripe listen --forward-to localhost:5000/api/payment/webhook`
+- **Secret:** Generated in terminal (`whsec_test_...`), pasted into `.env`.
+
+### 2. Remote Staging Forwarding (Remote CLI)
+Forward webhooks to a staging cloud instance directly from your terminal:
+```bash
+stripe listen --forward-to https://staging-api.yourdomain.com/api/payment/webhook
+```
+
+### 3. Live Production Listener (Stripe Dashboard)
+- **Never run CLI on production servers!**
+- Register your public URL in **Stripe Dashboard ➔ Developers ➔ Webhooks**:
+  ```
+  https://api.yourdomain.com/api/payment/webhook
+  ```
+- Copy the persistent signing secret (`whsec_live_...`) into your cloud hosting environment variables.
+
+---
+
+## 14. Phase 12: Express Application Assembly (`src/app.ts`)
 
 > [!IMPORTANT]
 > **Webhook Middleware Rule:**  
@@ -657,6 +927,7 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { userRoutes } from "./modules/user/user.route";
+import { paymentRoutes } from "./modules/payment/payment.route";
 import { notFound } from "./middlewares/notFound";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 
@@ -671,7 +942,7 @@ app.use(cors({
 // 2. ⚠️ Mount Raw Webhook parser BEFORE express.json()
 app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
 
-// 3. Standard Body Parsers
+// 3. Standard Body Parsers for normal routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -686,6 +957,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // 5. Application Feature Routes
 app.use("/api/users", userRoutes);
+app.use("/api/payment", paymentRoutes);
 
 // 6. 404 & Centralized Error Handlers (Always at the end)
 app.use(notFound);
@@ -696,7 +968,7 @@ export default app;
 
 ---
 
-## 13. Phase 11: Server Bootstrap & Lifecycle (`src/server.ts`)
+## 15. Phase 13: Server Bootstrap & Lifecycle (`src/server.ts`)
 
 ```ts
 // src/server.ts
@@ -728,61 +1000,60 @@ bootstrap();
 
 ---
 
-## 14. Phase 12: Running, Testing & Verifying Your New Backend
+## 16. Phase 14: How to Test Both Development & Production Systems
 
-### Step 1: Run Development Server
+### A. Testing the Development System (Local Machine)
+
+#### 1. Instant Synthetic Trigger
+Test if your Express webhook endpoint receives and verifies events:
 ```bash
+# Terminal 1: Run your server
 npm run dev
-```
-**Expected Output:**
-```
-✅ Database connected successfully
-🚀 Server listening on http://localhost:5000
-```
 
-### Step 2: Test Health Check in Terminal / Postman
-```bash
-curl http://localhost:5000/
-```
-**Expected Response:**
-```json
-{
-  "success": true,
-  "message": "API Server is running successfully!"
-}
-```
+# Terminal 2: Run Stripe CLI listener
+stripe listen --forward-to localhost:5000/api/payment/webhook
 
-### Step 3: Test User Registration
-```bash
-curl -X POST http://localhost:5000/api/users/register \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Alice", "email": "alice@example.com", "password": "securepassword123"}'
+# Terminal 3: Trigger synthetic event
+stripe trigger checkout.session.completed
 ```
-**Expected Response (`201 Created`):**
-```json
-{
-  "statusCode": 201,
-  "success": true,
-  "message": "User registered successfully",
-  "data": {
-    "id": "1a2b3c4d-...",
-    "name": "Alice",
-    "email": "alice@example.com",
-    "role": "USER",
-    "createdAt": "2026-10-08T21:00:00.000Z"
-  }
-}
-```
+**Expected Result:** Terminal 2 shows `[200] POST http://localhost:5000/api/payment/webhook`.
 
-### Step 4: Explore Your Database visually
-```bash
-npx prisma studio
-```
-Opens interactive database GUI on `http://localhost:5555`.
+#### 2. End-to-End Browser Checkout Test
+1. Call `POST http://localhost:5000/api/payment/checkout` with a valid JWT token.
+2. Open the returned `paymentUrl` in your browser.
+3. Pay using Stripe Test Card: `4242 4242 4242 4242` (Exp: future date, CVC: `123`).
+4. Watch the webhook log in Terminal 2.
+5. Run `npx prisma studio` and confirm the `subscriptions` table has updated to `ACTIVE`.
+
+#### 3. Idempotency Duplicate Test
+Replay the same event payload twice. Confirm your server logs `Duplicate event received. Skipping` and returns `200 OK` without creating duplicate records.
 
 ---
 
-## 15. Phase 13: Production Best Practices & Common Setup Traps
+### B. Testing the Production System (Live Cloud Server)
+
+#### 1. Pre-Flight Reachability Test (Stripe Dashboard)
+1. Open **Stripe Dashboard ➔ Developers ➔ Webhooks**.
+2. Click your live endpoint (`https://api.yourdomain.com/api/payment/webhook`).
+3. Click **"Send test event"** ➔ Select `checkout.session.completed`.
+4. Click **"Send test event"**.
+5. Confirm the response shows **`200 OK` (Green)** in `< 300ms`.
+
+#### 2. Live Low-Value Purchase & Refund ($1.00 Test)
+1. Create a $1.00 product in your live Stripe account.
+2. Complete a live purchase on your production site using a real debit/credit card.
+3. Confirm your user account status unlocks in your live PostgreSQL database.
+4. Issue an immediate refund in Stripe Dashboard ➔ Payments ➔ Refund.
+5. Confirm your webhook receives `charge.refunded` and updates the order status.
+
+#### 3. Downtime Recovery & Manual Redelivery
+1. In Stripe Dashboard ➔ Developers ➔ Webhooks ➔ Select Endpoint ➔ Event History.
+2. Click any event ➔ Click **"Resend"**.
+3. Confirm in production logs (`pm2 logs` / CloudWatch) that your server acknowledges the redelivery cleanly.
+
+---
+
+## 17. Phase 15: Production Best Practices & Common Setup Traps
 
 | # | Common Setup Trap | Why It Happens | How to Prevent It |
 | :-: | :--- | :--- | :--- |
@@ -791,6 +1062,7 @@ Opens interactive database GUI on `http://localhost:5555`.
 | **3** | **Module Import Extension Errors** | Mixing CommonJS and ESM imports. | Ensure `"type": "module"` in `package.json` and `"moduleResolution": "bundler"` in `tsconfig.json`. |
 | **4** | **Database Connection Exhaustion** | Creating `new PrismaClient()` inside controllers. | Always import the single instance from `src/lib/prisma.ts`. |
 | **5** | **Unhandled Promise Rejections** | Forgetting to wrap controllers in `catchAsync`. | Wrap every controller function: `const fn = catchAsync(async (req, res) => {...})`. |
+| **6** | **Running `stripe listen` in Production** | Misunderstanding CLI vs Dashboard listener. | Never run the CLI on live servers; configure Webhooks via Stripe Dashboard. |
 
 ---
 
