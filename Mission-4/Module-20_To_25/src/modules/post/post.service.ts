@@ -41,7 +41,7 @@ const getAllPosts = async (query: IPostQuery) => {
 
     const tagsArray = Array.isArray(tags) ? tags : [];
 
-    const andConditions : PostWhereInput[] = []
+    const andConditions : PostWhereInput[] = [];
 
     if(query.searchTerm) {
         andConditions.push({
@@ -243,7 +243,7 @@ const getAllPosts = async (query: IPostQuery) => {
             page,
             limit,
             total: result.length,
-            totalPages: Math.ceil(result.length / (limit || 1))
+            totalPages: Math.ceil(result.length / (limit))
         }
     };
 }
